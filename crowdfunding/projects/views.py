@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Project
-from .serializers import ProjectSerializer
+from .models import Project, Pledge
+from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSerializer
+from rest_framework import status, generics
 
 class ProjectList(APIView):
     def get(self,request):
@@ -12,7 +13,7 @@ class ProjectList(APIView):
     def post(self,request):
         serializer = ProjectSerializer(data=request.data)
         if serializer.is_valid(): 
-            serializer.save()
+            serializer.save(owner=request.user)
             return Response(serializer.data)
 
 class ProjectDetail(APIView):
@@ -21,6 +22,12 @@ class ProjectDetail(APIView):
 
     def get(self, request, pk):
         project = self.get_object(pk)
-        serializer = ProjectSerializer(project)
+        serializer = ProjectDetailSerializer(project)
         return Response(serializer.data)
-        
+   
+class PledgeList(generics.ListCreateAPIView):
+    queryset = Pledge.objects.all()
+    serializer_class = PledgeSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(supporter=self.request.user)
