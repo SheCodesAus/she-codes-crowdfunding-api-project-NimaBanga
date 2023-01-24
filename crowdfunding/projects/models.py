@@ -14,15 +14,19 @@ class Project(models.Model):
         User, on_delete=models.CASCADE,
         related_name='owner_projects'
     ) #On_delete cascade means if user deleted then their projects deleted as well.
+    project_date = models.DateField() #NB
+    project_starttime = models.DateTimeField() #NB
+    project_endtime = models.DateTimeField() #NB
 
 class Pledge(models.Model):
     amount = models.IntegerField()
     comment = models.CharField(max_length=200)
-    anonymous = models.BooleanField()
+    anonymous = models.BooleanField() #Do I delete it???
     project = models.ForeignKey('Project',on_delete=models.CASCADE,related_name='pledges')
     supporter = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='supporter_pledges'
     )
+    # pledge_date = models.DateTimeField(auto_now_add=True)
 
     
