@@ -17,16 +17,24 @@ class Project(models.Model):
     project_date = models.DateField() #NB
     project_starttime = models.DateTimeField() #NB
     project_endtime = models.DateTimeField() #NB
+    project_location = models.TextField() #NB
+
+    def __str__(self) -> str:
+        return self.title
 
 class Pledge(models.Model):
-    amount = models.IntegerField()
+    pledge_time = models.BooleanField()
+    # amount = models.IntegerField()
     comment = models.CharField(max_length=200)
-    anonymous = models.BooleanField() #Do I delete it???
+    # anonymous = models.BooleanField() 
     project = models.ForeignKey('Project',on_delete=models.CASCADE,related_name='pledges')
     supporter = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='supporter_pledges'
     )
-    # pledge_date = models.DateTimeField(auto_now_add=True)
+    pledge_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.project
 
     

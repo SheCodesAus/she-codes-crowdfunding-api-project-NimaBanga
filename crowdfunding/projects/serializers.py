@@ -13,6 +13,7 @@ class ProjectSerializer(serializers.Serializer):
     project_date = serializers.DateField() #NB
     project_starttime = serializers.DateTimeField() #NB
     project_endtime = serializers.DateTimeField() #NB
+    project_location = serializers.CharField(max_length=200)
 
    
     def create(self, validated_data):
@@ -21,8 +22,8 @@ class ProjectSerializer(serializers.Serializer):
 class PledgeSerializer(serializers.ModelSerializer): #modelserializer command infer type of the fields from the model
     class Meta:
         model = Pledge
-        fields = ['id', 'amount', 'comment', 'anonymous', 'project', 'supporter']
-        read_only_fields = [ 'id', 'supporter']
+        fields = ['id', 'pledge_time', 'comment', 'project', 'supporter', 'pledge_date']
+        read_only_fields = [ 'id', 'project','supporter','pledge_date']
     
     def create(self, validated_data):
         return Pledge.objects.create(**validated_data)
@@ -41,6 +42,7 @@ class ProjectDetailSerializer(ProjectSerializer):
         instance.project_date = validated_data.get('project_date', instance.project_date) #NB1
         instance.project_starttime = validated_data.get('project_starttime', instance.project_starttime) #NB
         instance.project_endtime = validated_data.get('project_endtime', instance.project_endtime) #NB
+        instance.project_location = validated_data.get('project_location', instance.project_location) #NB
         instance.save()
         return instance
 
